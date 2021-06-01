@@ -3,9 +3,10 @@
 #define TRIG A2
 #define VOUT A6
 
-#define USART_BAUD_RATE(BAUD_RATE) ((float)(F_CPU * 64 / (16 * (float)BAUD_RATE)) + 0.5)  
+// for Serial port
 #define USARTPA1
 #define SERIALBAUD 250000
+
 uint16_t val;
 uint8_t cnt;
 
