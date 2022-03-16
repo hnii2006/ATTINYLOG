@@ -1,41 +1,22 @@
-#define LEVEL 1500
-#define MAXLEVEL 1800
-#define TRIG A2
-#define VOUT A6
+// LOG output library for small footprint like ATTINY202
+// 2022/3/16 H.Nii
 
-// for Serial port
+// for Serial port setting
 #define USARTPA1
-#define SERIALBAUD 250000
-
-uint16_t val;
-uint8_t cnt;
+#define SERIALBAUD 9600
 
 void setup() {
   usartInit();
-  VREF.CTRLA = 0x1<<4;//6-4:ADCREF,2-0:DACREF,(1:1.1v, 2:2.5V, 3:4.3V, 4:1.5V)
-  ADC0.MUXPOS  = 0x1E;//4-0:MUXPOS(0:AIN0,,7:AIN7,,1E:TEMSENSE)
-  ADC0.CTRLC   = 0x04;//6:SAMPCAP(1:vref>1v,0:vref<1v), 5-4:REFSEL(INTERNAL REF, VDD, EXTERNAL REF, -), 2-0:PRESC(0:div2, 7:dev256)
-  ADC0.CALIB   = 0x01;//0:DUTYCYC(0:50% ADCCLK>1.5MHz,1:25% < 1.5MHz)
-  ADC0.CTRLA   = 0x03;//7:RUNSTDBY, 2:RESSEL(0:10bit, 1:8bit), 1:FREERUN, 0:ENABLE
-  ADC0.COMMAND = 0x01;//0:STCONV  
 }
 void loop() {  
-  int8_t sigrow_offset = SIGROW.TEMPSENSE1; // 識票列から符号付き変位(ｵﾌｾｯﾄ)補正値読み込み
-  uint8_t sigrow_gain = SIGROW.TEMPSENSE0; // 識票列から符号なし利得補正値読み込み
-  uint16_t adc_reading = ADC0.RES; // 1.1V内部基準電圧でのA/D変換結果
-  uint32_t temp = adc_reading - sigrow_offset;
-  temp *= sigrow_gain; // 結果(10ﾋﾞｯﾄ×8ﾋﾞｯﾄ)は16ﾋﾞｯﾄ変数を溢れるかもしれません。
-  //temp += 0x80; // 次の除算で正しい丸めを得るために1/2を加算
-  uint16_t temperature_in_K = temp >> 8; // ｹﾙﾋﾞﾝ温度を得るために結果を除算
-  temp &= 0xff;
-  temp *= 100;
-  temp /= 256;
+  int test = 10;
+  usartSendString("Decimal 10 (normal)= ");
+  usartSendUint(test,0,10);
+  usartSendString("\n Decimal 10 (4 digit)= ");
+  usartSendUint(test,4,10);
+  usartSendString("\n Hex 10 (2 digit)= ");
+  usartSendUint(test,2,16);
   usartSendChar('\n');
-  usartSendUint(adc_reading,4,10);
-  usartSendString(",");
-  usartSendUint(temperature_in_K,4,10);
-  usartSendString(".");
-  usartSendUint(temp,2,10);
   delay(1000);
 }
 
