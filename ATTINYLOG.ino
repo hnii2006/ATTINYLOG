@@ -2,7 +2,9 @@
 // 2022/3/16 H.Nii
 
 // for Serial port setting
-#define USARTPA1
+// PA6 is normal TX port.
+// Define USARTPA1 if PA1 is TX port.
+#define USARTPA1      
 #define SERIALBAUD 9600
 
 void setup() {
