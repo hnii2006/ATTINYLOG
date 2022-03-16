@@ -17,6 +17,8 @@ void loop() {
   usartSendString("\n Hex 10 (2 digit)= ");
   usartSendUint(test,2,16);
   usartSendChar('\n');
+  char dat[3]={0x41,0x42,0x43};
+  dump_hex("Dump test->",dat, 3, 1);
   delay(1000);
 }
 
@@ -59,7 +61,7 @@ void usartSendUint(uint16_t d, char digit, char base) {
     usartSendChar(b[i]+'0');  
   }
 }
-
+/// *msg is string before data, *row is char buffer, n is length, ascii is ascii display option 
 void dump_hex(const char *msg, const uint8_t *row, int n, bool ascii)
 {
     usartSendString(msg);
